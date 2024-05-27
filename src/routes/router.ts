@@ -4,6 +4,8 @@ import { MongoDBUserRepo } from "../repositories/UserRepo";
 import { MongoClient } from "mongodb";
 import { postNew } from "./user/new";
 import { postUpdate } from "./user/update";
+import { postLogIn } from "./user/login";
+import { verifyJWT } from "../middlewares/jwtAuth";
 
 
 export type Responses = {
@@ -13,8 +15,9 @@ export type Responses = {
 export const UserRouter = (client: MongoClient) => {
     const router = Router();
     const UserRepo = new MongoDBUserRepo("db", "users", client);
-    router.get("/me", (req, res) => getMe(req, res, UserRepo));
+    router.get("/me", verifyJWT, (req, res) => getMe(req, res, UserRepo));
     router.post("/new", (req, res) => postNew(req, res, UserRepo));
-    router.get("/update", (req, res) => postUpdate(req, res, UserRepo));
+    router.post("/update", verifyJWT, (req, res) => postUpdate(req, res, UserRepo));
+    router.post("/login", (req, res) => postLogIn(req, res, UserRepo));
     return router;
 }
