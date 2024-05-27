@@ -71,7 +71,7 @@ export class MongoDBUserRepo implements UserRepo {
     }
 
     async updateUsername(id: string, newUsername: string): Promise<UpdateResult> {
-        if (!id || !newUsername || newUsername.length < 8) {
+        if (!id || !newUsername || newUsername.length < 3) {
             return UpdateResult.INVALID_UPDATE
         }
         try {
